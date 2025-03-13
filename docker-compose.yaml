@@ -1,0 +1,33 @@
+
+services:
+  # Pulsar standalone includes ZooKeeper, BookKeeper, and Pulsar broker
+  pulsar:
+    image: apachepulsar/pulsar:3.3.4
+    container_name: pulsar
+    ports:
+      - "6650:6650"  # Pulsar binary protocol
+      - "8080:8080"  # Pulsar web admin
+    environment:
+      enableBrokerSideSubscriptionPatternEvaluation: "false"
+      PULSAR_MEM: " -Xms1G -Xmx1G -XX:MaxDirectMemorySize=2G"
+      allowAutoTopicCreationType: "partitioned"
+      brokerDeleteInactiveTopicsEnabled: "false"
+      forceDeleteNamespaceAllowed: "true"
+      systemTopicEnabled: "true"
+      allowAutoTopicCreation: "true"
+    command: >
+      /bin/bash -c "bin/apply-config-from-env.py conf/standalone.conf && bin/pulsar standalone -nss -nfw"
+
+    healthcheck:
+      test: ["CMD", "bin/pulsar-admin", "brokers", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+    networks:
+      - pulsar-network
+
+networks:
+  pulsar-network:
+    driver: bridge
+    name: pulsar-network
