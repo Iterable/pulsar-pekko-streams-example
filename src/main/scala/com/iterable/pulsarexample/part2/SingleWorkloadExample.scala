@@ -29,12 +29,15 @@ import scala.util.Failure
 import scala.util.Success
 
 /**
- * Demonstrates how to set up and run a single Pulsar-Pekko stream with proper error handling and resource management.
- * This example shows direct stream composition and proper shutdown handling.
+ * Example:
+ *
+ *   1. Create a single consumer and producer 2. Publish more test messages than we can process at one time. 3. Create a
+ *      stream that processes those messages and republishes them in a loop. The stream will only process 2 of 3
+ *      messages at once because we limit it. 4. Wait 30 seconds and then shut down the stream.
  */
 object SingleWorkloadExample {
 
-  val logger = Logger("MultipleMessageExample")
+  val logger = Logger("SingleWorkloadExample")
 
   // Example topic name
   val testTenant = "testing"
@@ -124,18 +127,8 @@ object SingleWorkloadExample {
           }
         } yield {
 
-          val testSource = Source(List("first-test-message", "second-test-message", "third-test-message"))
-            .mapAsyncUnordered(2) { message =>
-              Future {
-                Thread.sleep(1000)
-                println(s"Testing message: $message")
-                Future.successful(message)
-              }
-            }
-            .runWith(Sink.ignore)
-
           val source = new PulsarPekkoSource(consumer)
-          val processor = new SimpleMessageProcessor(producer, "parallel-consumer", 1000, 500, logger, system, ec)
+          val processor = new SimpleMessageProcessor(producer, "parallel-consumer", 5000, 500, logger, system, ec)
 
           // Configure stream parallelism
           val parallelism = StreamParallelism(
@@ -144,7 +137,7 @@ object SingleWorkloadExample {
           )
 
           // Create the source with parallel processing
-          val (killSwitch, streamCompletionFuture) = PekkoStreamGenerator
+          val (_, streamCompletionFuture) = PekkoStreamGenerator
             .createStreamFromSourceAndProcessingSteps(
               consumer = consumer,
               source = source,
@@ -152,7 +145,6 @@ object SingleWorkloadExample {
               processor = processor,
               metrics = metrics
             )
-            .viaMat(KillSwitches.single)(Keep.right)
             .toMat(Sink.ignore)(Keep.both)
             .run()
 

@@ -117,6 +117,9 @@ object MultipleWorkloadsExample {
         reportingInterval = 1.seconds
       )
 
+    // Here just for the sake of brevity
+    val parallelism = StreamParallelism(5, 5)
+
     val brokerUrl = args.headOption.map(domain => s"pulsar://${domain}:6650").getOrElse("pulsar://localhost:6650")
     val adminUrl = args.headOption.map(domain => s"http://${domain}:8080").getOrElse("http://localhost:8080")
     val experiment = PulsarClientSetup.setup("testing", "part3", adminUrl, brokerUrl) match {
@@ -196,7 +199,6 @@ object MultipleWorkloadsExample {
         )
 
       parallelism = StreamParallelism(5, 5)
-
       // This is not a stream of streams. The response is actually a set of shutdown hooks.
       // We generate each stream and allow Pekko's Materializer to manage them.
       streamOfShutdownHooks = {
