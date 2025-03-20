@@ -133,10 +133,10 @@ object OrderedWorkloadsExample {
           _ <- createMessages(
             producer2,
             Seq(
-              ("apple", "fruit-tree"),
-              ("cherry", "fruit-tree"),
-              ("raspberry", "fruit-bramble"),
-              ("blackberry", "fruit-bramble")
+              ("wolf", "wild-dog"),
+              ("fox", "wild-dog"),
+              ("labrador", "domesticated-dog"),
+              ("shepherd", "domesticated-dog")
             )
           )
 
@@ -185,13 +185,13 @@ object OrderedWorkloadsExample {
           _ = managementService.startWorkloadUpdaterFlow()
         } yield {
           val workload1 = Workload("cats-workload", topic1, StreamParallelism(5, 5))
-          val workload2 = Workload("fruit-workload", topic2, StreamParallelism(5, 5))
+          val workload2 = Workload("dogs-workload", topic2, StreamParallelism(5, 5))
 
           logger.info("No consumption because no workloads are registered")
 
           Thread.sleep(5000)
 
-          logger.info("Adding another workload (cats)")
+          logger.info("Starting two workloads (cats, dogs)")
 
           discoveryService.setNewWorkloads(Set(workload1, workload2))
 

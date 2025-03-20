@@ -120,13 +120,13 @@ object WorkloadDiscoveryExample {
           )
           _ <- createMessages(
             producer2,
-            Seq("apple", "banana", "cherry"),
+            Seq("wolf", "coyote", "fox"),
             TestPayload.apply
           )
           _ <-
             createMessages(
               producer3,
-              Seq("red", "green", "blue", "yellow"),
+              Seq("eagle", "falcon", "hawk", "owl"),
               TestPayload.apply
             )
 
@@ -162,36 +162,36 @@ object WorkloadDiscoveryExample {
           _ = managementService.startWorkloadUpdaterFlow()
         } yield {
           val workload1 = Workload("cats-workload", topic1, StreamParallelism(5, 5))
-          val workload2 = Workload("fruit-workload", topic2, StreamParallelism(5, 5))
-          val workload3 = Workload("colors-workload", topic3, StreamParallelism(5, 5))
+          val workload2 = Workload("dogs-workload", topic2, StreamParallelism(5, 5))
+          val workload3 = Workload("birds-workload", topic3, StreamParallelism(5, 5))
 
-          logger.info("No consumption because no workloads are registered")
+          logger.info("Nothing is running because we haven't 'discovered' any workloads yet")
 
           Thread.sleep(5000)
 
-          logger.info("Adding another workload (cats)")
+          logger.info("Starting a single workload (cats)")
 
           discoveryService.setNewWorkloads(Set(workload1))
 
-          Thread.sleep(20000)
+          Thread.sleep(10000)
 
-          logger.info("Adding another workload (fruits)")
+          logger.info("Starting a second workload (dogs)")
 
           discoveryService.setNewWorkloads(Set(workload1, workload2))
 
-          Thread.sleep(20000)
+          Thread.sleep(10000)
 
-          logger.info("Removing a workload (cats)")
+          logger.info("Stopping the first workload (cats)")
 
           discoveryService.setNewWorkloads(Set(workload2))
 
-          Thread.sleep(20000)
+          Thread.sleep(10000)
 
-          logger.info("Removing a workload (fruits) AND Adding both other workloads (cats, colors)")
+          logger.info("Stopping the second workload (dogs) AND Staring both the first workload (cats) and a new third workload (birds)")
 
           discoveryService.setNewWorkloads(Set(workload1, workload3))
 
-          Thread.sleep(20000)
+          Thread.sleep(10000)
 
           managementService.shutdown().map { _ =>
             for {

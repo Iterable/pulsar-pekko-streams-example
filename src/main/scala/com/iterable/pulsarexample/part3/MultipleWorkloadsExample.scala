@@ -220,11 +220,11 @@ object MultipleWorkloadsExample {
       _ <- createMessages(producer1, Seq("lion", "tiger", "panther", "leopard", "lynx", "jaguar"), TestPayload.apply)
       _ <- createMessages(
         producer2,
-        Seq("apple", "banana", "cherry", "raspberry", "strawberry", "blueberry"),
+        Seq("wolf", "coyote", "jackal", "dingo", "fox", "dhole"),
         TestPayload.apply
       )
       _ <-
-        createMessages(producer3, Seq("red", "green", "blue", "yellow", "orange", "purple", "pink"), TestPayload.apply)
+        createMessages(producer3, Seq("falcon", "eagle", "hawk", "vulture", "osprey", "kite", "owl"), TestPayload.apply)
 
       // Get the set of shutdown hooks for each stream
       shutdownHooks <- streamOfShutdownHooks._2

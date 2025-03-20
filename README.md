@@ -9,6 +9,16 @@ An example demonstrating how to build out a highly parallel workload management 
 3. This is not production ready so expect some bugs around shutdown and message cleanup.
 4. If you have issues running tests repeatedly clear out the pulsar container by running `docker-commpose down && docker-compose up`
 
+## Resources
+
+1. [Pekko Streams QuickStart](https://pekko.apache.org/docs/pekko/1.0/stream/stream-quickstart.html)
+2. [Pekko Streams Basics](https://pekko.apache.org/docs/pekko/1.0/stream/stream-flows-and-basics.html#basics-and-working-with-flows)
+3. [CleverCloud pulsar4s Repo - Pekko Source implementation](https://github.com/CleverCloud/pulsar4s)
+4. [How Pulsar Works](https://jack-vanlightly.com/blog/2018/10/2/understanding-how-apache-pulsar-works)
+5. [Multi Topic Consumers](https://jack-vanlightly.com/?offset=1589457102345)
+6. [Pulsar Summit Talk on How Iterable uses Pulsar](https://www.youtube.com/watch?v=mbq5vnagzWk)
+7. [Reactive Streams Interop](https://pekko.apache.org/docs/pekko/1.1/stream/reactive-streams-interop.html)
+
 
 ## Overview of what is built here:
 
